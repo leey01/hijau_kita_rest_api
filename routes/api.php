@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Client\BrowseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,4 +46,15 @@ Route::group(['prefix' => 'email', 'middleware' => ['auth:api']], function () {
     Route::post('/verification', [EmailVerificationController::class, 'email_verification']);
     // send email verification
     Route::get('/verification/send', [EmailVerificationController::class, 'sendEmailVerification']);
+});
+
+// Browse
+Route::group(['prefix' => 'browse', 'middleware' => ['auth:api', 'verified']], function () {
+    Route::post('/', [BrowseController::class, 'index']);
+    Route::get('/list-categories', [BrowseController::class, 'listCategories']);
+    Route::get('/list-sub-categories', [BrowseController::class, 'listSubCategories']);
+    Route::get('/latest-activities', [BrowseController::class, 'latestActivities']);
+    Route::get('/detail-sub-category/{id}', [BrowseController::class, 'detailSubKategory']);
+    Route::get('/detail-activity/{id}', [BrowseController::class, 'detailActivity']);
+    Route::get('/detail-quiz/{id}', [BrowseController::class, 'detailQuiz']);
 });

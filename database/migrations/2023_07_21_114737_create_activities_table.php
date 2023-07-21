@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->string('image');
-            $table->enum('label', ['Sepeda', 'Botol Plastik', 'Botol'])->nullable()->default(null);
             $table->integer('reward');
             $table->enum('activity_type', ['photo', 'quiz']);
+            $table->enum('label', ['Sepeda', 'Botol Plastik', 'Botol'])->nullable()->default(null);
             $table->timestamps();
         });
     }
