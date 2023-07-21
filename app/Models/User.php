@@ -6,7 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
+        'provider_id',
+        'provider_name',
+        'google_access_token_json',
+        'email_verified_at',
     ];
 
     /**
@@ -31,6 +37,13 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'provider_id',
+        'provider_name',
+        'google_access_token_json',
+        'email_verified_at',
+        'created_at',
+        'updated_at',
+        'avatar'
     ];
 
     /**
@@ -42,4 +55,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected $appends = [
+        'avatar_url',
+    ];
+
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatar) {
+            if ($this->provider_name == null) {
+                return Storage::disk('public')->url($this->avatar);
+            }
+
+            return $this->avatar;
+        }
+
+        return Storage::disk('public')->url('avatars/default.png');
+    }
+
+
 }
