@@ -20,6 +20,7 @@ class Event extends Model
     protected $appends = [
         'image_url',
         'is_done'
+        //pp
     ];
     public function getImageUrlAttribute()
     {
