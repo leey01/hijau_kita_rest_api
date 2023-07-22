@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Client\BrowseController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\LeaderboardController;
@@ -43,6 +44,8 @@ Route::get('/verifiy-notice', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware(['auth:api']);
+// login by google
+Route::post('/google/verify-token', [GoogleController::class, 'verifyGoogleIdToken']);
 
 //make route group with prefix email
 Route::group(['prefix' => 'email', 'middleware' => ['auth:api']], function () {
