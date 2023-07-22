@@ -19,15 +19,15 @@ class Event extends Model
     ];
     protected $fillable = ['name', 'sub_category_id','description', 'image', 'date_start', 'date_end', 'code'];
     protected $appends = [
+        'is_done',
         'image_url',
-        'is_done'
     ];
     public function getImageUrlAttribute()
     {
         if ($this->image == null) {
             return null;
         }
-        return Storage::disk('public')->url($this->image);
+        return $this->image;
     }
     public function scopeActive($query)
     {
