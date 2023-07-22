@@ -19,6 +19,7 @@ class Event extends Model
     protected $fillable = ['name', 'sub_category_id','description', 'image', 'date_start', 'date_end', 'code'];
     protected $appends = [
         'image_url',
+        'is_done'
     ];
     public function getImageUrlAttribute()
     {
