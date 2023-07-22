@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Client\BrowseController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\LeaderboardController;
+use App\Http\Controllers\Client\ProfileController;
 use App\Http\Controllers\Client\TrxController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -76,6 +77,7 @@ Route::group(['prefix' => 'trx', 'middleware' => ['auth:api', 'verified']], func
     Route::post('/activity', [TrxController::class, 'trxActivity']);
     Route::post('/event', [TrxController::class, 'trxEvent']);
     Route::post('/add-remove-wishlist/{id}', [TrxController::class, 'addRemoveActivityWishlist']);
+    Route::post('/badge', [TrxController::class, 'trxBadge']);
 });
 
 // Leaderboard
@@ -83,4 +85,12 @@ Route::group(['prefix' => 'leaderboard', 'middleware' => ['auth:api', 'verified'
     Route::get('/', [LeaderboardController::class, 'index']);
     Route::get('/my-point', [LeaderboardController::class, 'myPoint']);
     Route::get('/list', [LeaderboardController::class, 'leaderboard']);
+});
+
+// Profile
+Route::group(['prefix' => 'profile', 'middleware' => ['auth:api', 'verified']], function () {
+    Route::get('/', [ProfileController::class, 'index']);
+    Route::get('/done-activities', [ProfileController::class, 'doneActivities']);
+    Route::get('/list-badges', [ProfileController::class, 'listBadges']);
+    Route::get('/my-badges', [ProfileController::class, 'myBadge']);
 });

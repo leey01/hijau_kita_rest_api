@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
+use App\Models\Badge;
 use App\Models\Event;
 use App\Models\TrxActivity;
+use App\Models\TrxBadge;
 use App\Models\TrxEvent;
 use App\Models\User;
 use App\Models\Wishlist;
@@ -160,4 +162,42 @@ class TrxController extends Controller
             ]);
         }
     }
+    public function trxBadge(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'badge_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $badge = Badge::find($request->badge_id);
+
+        $user = User::find($request->user()->id);
+
+        if ($user->point < $badge->price) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Point not enough',
+            ], 400);
+        } else {
+            $user->point = $user->point - $badge->price;
+            $user->save();
+        }
+
+        $data = TrxBadge::create([
+            'user_id' => $request->user()->id,
+            'badge_id' => $request->badge_id,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $data,
+        ]);
+    }
+
 }
