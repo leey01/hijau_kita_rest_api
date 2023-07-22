@@ -39,4 +39,19 @@ class Event extends Model
     {
         return $this->hasMany(EventProvision::class, 'event_id', 'id');
     }
+//    is done attribute
+    public function getIsDoneAttribute()
+    {
+        $user_id = auth()->user()->id;
+        $event_id = $this->id;
+        $is_done = DB::table('trx_events')
+            ->where('user_id', $user_id)
+            ->where('event_id', $event_id)
+            ->first();
+        if ($is_done) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
