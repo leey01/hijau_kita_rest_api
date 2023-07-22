@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Client\BrowseController;
+use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\TrxController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,13 @@ Route::group(['prefix' => 'email', 'middleware' => ['auth:api']], function () {
     Route::post('/verification', [EmailVerificationController::class, 'email_verification']);
     // send email verification
     Route::get('/verification/send', [EmailVerificationController::class, 'sendEmailVerification']);
+});
+
+// Home
+Route::group(['prefix' => 'home', 'middleware' => ['auth:api', 'verified']], function () {
+    Route::get('/', [HomeController::class, 'index']);
+    Route::get('/profile', [HomeController::class, 'profile']);
+    Route::get('/activity-wishlist', [HomeController::class, 'activityWishlist']);
 });
 
 // Browse
