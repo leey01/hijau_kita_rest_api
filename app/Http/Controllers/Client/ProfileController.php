@@ -43,6 +43,7 @@ class ProfileController extends Controller
 
         $groupedDataWithCount = $groupedData->map(function ($group) {
             return [
+                'id' => $group->first()->activity->sub_category->id,
                 'sub_category' => $group->first()->activity->sub_category->name,
                 'image_url' => $group->first()->activity->sub_category->image_url,
                 'count' => $group->count(),
