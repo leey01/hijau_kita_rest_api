@@ -48,4 +48,17 @@ class GoogleController extends Controller
             'passport_token' => $passportToken,
         ], 200);
     }
+
+    function generatePassportToken($userEmail)
+    {
+        $user = \App\Models\User::where('email', $userEmail)->first();
+
+        // Revoke token akses Passport yang ada sebelumnya, jika ada
+        $user->tokens()->delete();
+
+        // Buat token akses Passport baru untuk pengguna
+        $token = $user->createToken($user->name)->accessToken;
+
+        return $token;
+    }
 }
