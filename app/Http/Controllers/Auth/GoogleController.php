@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Google_Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class GoogleController extends Controller
 {
@@ -27,6 +28,7 @@ class GoogleController extends Controller
                     'provider_name' => 'google',
                     'name' => $payload['name'],
                     'email' => $payload['email'],
+                    'password' => Hash::make('password'),
                     'avatar' => $payload['picture'],
                     'email_verified_at' => now()
                 ]);
