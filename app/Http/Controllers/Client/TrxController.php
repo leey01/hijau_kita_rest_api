@@ -8,9 +8,11 @@ use App\Models\Event;
 use App\Models\TrxActivity;
 use App\Models\TrxEvent;
 use App\Models\User;
+use App\Models\Wishlist;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -130,6 +132,32 @@ class TrxController extends Controller
                 'status' => 'error',
                 'message' => 'Redemption period not started yet.',
             ], 422);
+        }
+    }
+
+    public function addRemoveActivityWishlist($id)
+    {
+        $wishlist = Wishlist::where('user_id', Auth::user()->id)
+            ->where('activity_id', $id)
+            ->first();
+
+        if ($wishlist) {
+            $wishlist->delete();
+
+            return response()->json([
+                'message' => 'deleted',
+                'data' => $wishlist
+            ]);
+        } else {
+            $data = Wishlist::create([
+                'user_id' => Auth::user()->id,
+                'activity_id' => $id
+            ]);
+
+            return response()->json([
+                'message' => 'created',
+                'data' => $data
+            ]);
         }
     }
 }

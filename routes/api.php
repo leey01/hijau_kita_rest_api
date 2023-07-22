@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Client\BrowseController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\LeaderboardController;
 use App\Http\Controllers\Client\TrxController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -74,4 +75,12 @@ Route::group(['prefix' => 'browse', 'middleware' => ['auth:api', 'verified']], f
 Route::group(['prefix' => 'trx', 'middleware' => ['auth:api', 'verified']], function () {
     Route::post('/activity', [TrxController::class, 'trxActivity']);
     Route::post('/event', [TrxController::class, 'trxEvent']);
+    Route::post('/add-remove-wishlist/{id}', [TrxController::class, 'addRemoveActivityWishlist']);
+});
+
+// Leaderboard
+Route::group(['prefix' => 'leaderboard', 'middleware' => ['auth:api', 'verified']], function () {
+    Route::get('/', [LeaderboardController::class, 'index']);
+    Route::get('/my-point', [LeaderboardController::class, 'myPoint']);
+    Route::get('/list', [LeaderboardController::class, 'leaderboard']);
 });

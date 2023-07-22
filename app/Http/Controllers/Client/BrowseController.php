@@ -238,30 +238,4 @@ class BrowseController extends Controller
             'data' => $quiz
         ]);
     }
-
-    public function addRemoveActivityWishlist($id)
-    {
-        $wishlist = Wishlist::where('user_id', Auth::user()->id)
-            ->where('activity_id', $id)
-            ->first();
-
-        if ($wishlist) {
-            $wishlist->delete();
-
-            return response()->json([
-                'message' => 'deleted',
-                'data' => $wishlist
-            ]);
-        } else {
-            $data = Wishlist::create([
-                'user_id' => Auth::user()->id,
-                'activity_id' => $id
-            ]);
-
-            return response()->json([
-                'message' => 'created',
-                'data' => $data
-            ]);
-        }
-    }
 }
