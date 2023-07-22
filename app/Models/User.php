@@ -73,5 +73,8 @@ class User extends Authenticatable
         return Storage::disk('public')->url('avatars/default.png');
     }
 
-
+    public function wishlist()
+    {
+        return $this->belongsToMany(Activity::class, 'wishlists', 'user_id', 'activity_id')->with('sub_category');
+    }
 }
