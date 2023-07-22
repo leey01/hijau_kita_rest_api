@@ -17,6 +17,7 @@ class ProfileController extends Controller
         $data['done_activities'] = $this->doneActivities();
         $data['my_badges'] = $this->myBadge();
         $data['list_badges'] = $this->listBadges();
+        $data['history'] = $this->historyActivity();
 
         return response()->json([
             'message' => 'success',
@@ -72,6 +73,24 @@ class ProfileController extends Controller
                 'name' => $badge->badge->name,
                 'image_url' => $badge->badge->image_url,
                 'price' => $badge->badge->price,
+            ];
+        });
+
+        return $mapped ?? '';
+    }
+
+    public function historyActivity()
+    {
+        $data = TrxActivity::with('activity')
+            ->where('user_id', auth()->user()->id)
+            ->get();
+
+        $mapped = $data->map(function ($trx) {
+            return [
+                'sub_category_id' => $trx->activity->sub_category->id,
+                'activity_name' => $trx->activity->name,
+                'image_url' => $trx->activity->image_url,
+                'point_earned' => $trx->point_earned,
             ];
         });
 
