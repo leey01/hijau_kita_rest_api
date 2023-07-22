@@ -54,7 +54,9 @@ Route::group(['prefix' => 'browse', 'middleware' => ['auth:api', 'verified']], f
     Route::get('/list-categories', [BrowseController::class, 'listCategories']);
     Route::get('/list-sub-categories', [BrowseController::class, 'listSubCategories']);
     Route::get('/latest-activities', [BrowseController::class, 'latestActivities']);
+    Route::get('/latest-events', [BrowseController::class, 'latestEvents']);
     Route::get('/detail-sub-category/{id}', [BrowseController::class, 'detailSubKategory']);
     Route::get('/detail-activity/{id}', [BrowseController::class, 'detailActivity']);
+    Route::get('/detail-event/{id}', [BrowseController::class, 'detailEvent']);
     Route::get('/detail-quiz/{id}', [BrowseController::class, 'detailQuiz']);
 });

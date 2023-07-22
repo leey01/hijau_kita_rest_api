@@ -28,6 +28,10 @@ class BrowseController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $events = Event::with('sub_category')
+            ->active()
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $subCategories = SubCategory::orderBy('created_at', 'desc')
             ->get();
@@ -48,6 +52,15 @@ class BrowseController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
+            $result['events'] = Event::with('sub_category')
+                ->active()
+                ->where('name', 'like', '%' . $search . '%')
+                ->whereHas('sub_category', function ($query) use ($category_id) {
+                    $query->whereIn('category_id', $category_id);
+                })
+                ->orderBy('created_at', 'desc')
+                ->get();
+
 
         } else if ($search) {
             $result['activities'] = Activity::with('sub_category')
@@ -59,6 +72,11 @@ class BrowseController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
+            $result['events'] = Event::with('sub_category')
+                ->active()
+                ->where('name', 'like', '%' . $search . '%')
+                ->orderBy('created_at', 'desc')
+                ->get();
 
         } else if ($category_id) {
             foreach ($category_id as $id) {
@@ -81,8 +99,18 @@ class BrowseController extends Controller
             }
             $result['sub_categories'] = array_slice($filteredSubCategories, 0, 3);
 
+            foreach ($category_id as $id) {
+                foreach ($events as $event) {
+                    if ($event->sub_category->category_id == $id) {
+                        $filteredEvents[] = $event;
+                    }
+                }
+            }
+            $result['events'] = array_slice($filteredEvents, 0, 5);
+
         } else {
             $result['activities'] = $activities->take(5);
+            $result['events'] = $events->take(5);
             $result['sub_categories'] = $subCategories->take(5);
         }
 
@@ -140,6 +168,35 @@ class BrowseController extends Controller
         ]);
     }
 
+    public function latestEvents(Request $request)
+    {
+        $category_id = $request->category_id;
+
+        $events = Event::with('sub_category')
+            ->active()
+            ->orderBy('created_at', 'desc')
+            ->get();
+        $filteredEvents = [];
+
+        if ($category_id) {
+            foreach ($category_id as $id) {
+                foreach ($events as $event) {
+                    if ($event->sub_category->category_id == $id) {
+                        $filteredEvents[] = $event;
+                    }
+                }
+            }
+        } else {
+            $filteredEvents = $events;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'events' => $filteredEvents
+        ]);
+
+    }
+
     public function detailSubKategory($id)
     {
         $kategori = SubCategory::with(['susdev_goals', 'activities'])->find($id);
@@ -157,6 +214,16 @@ class BrowseController extends Controller
         return response()->json([
             'message' => 'success',
             'data' => $activity
+        ]);
+    }
+
+    public function detailEvent($id)
+    {
+        $event = Event::with(['sub_category','sub_category.susdev_goals', 'provision'])->find($id);
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $event ?? ''
         ]);
     }
 
