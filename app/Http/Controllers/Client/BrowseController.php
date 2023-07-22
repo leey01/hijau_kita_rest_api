@@ -199,7 +199,7 @@ class BrowseController extends Controller
 
     public function detailSubKategory($id)
     {
-        $kategori = SubCategory::with(['susdev_goals', 'activities'])->find($id);
+        $kategori = SubCategory::with(['susdev_goals', 'activities','events'])->find($id);
 
         return response()->json([
             'message' => 'success',

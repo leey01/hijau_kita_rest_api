@@ -37,4 +37,9 @@ class SubCategory extends Model
     {
         return $this->hasMany(Activity::class, 'sub_category_id', 'id')->with('sub_category');
     }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class, 'sub_category_id', 'id')->with('sub_category');
+    }
 }
