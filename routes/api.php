@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Client\BrowseController;
+use App\Http\Controllers\Client\TrxController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -59,4 +60,10 @@ Route::group(['prefix' => 'browse', 'middleware' => ['auth:api', 'verified']], f
     Route::get('/detail-activity/{id}', [BrowseController::class, 'detailActivity']);
     Route::get('/detail-event/{id}', [BrowseController::class, 'detailEvent']);
     Route::get('/detail-quiz/{id}', [BrowseController::class, 'detailQuiz']);
+});
+
+// Trx
+Route::group(['prefix' => 'trx', 'middleware' => ['auth:api', 'verified']], function () {
+    Route::post('/activity', [TrxController::class, 'trxActivity']);
+    Route::post('/event', [TrxController::class, 'trxEvent']);
 });
